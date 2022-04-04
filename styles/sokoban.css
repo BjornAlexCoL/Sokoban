@@ -4,14 +4,12 @@ body{
     width:100vw;
 }
 main {
-    width:500px;
-    height:500px;
     margin-left:auto;
     margin-right:auto;
 }
 .tile {
-    width: 25px;
-    height: 25px;
+    width: 50px;
+    height: 50px;
     float: left;
 }
 .tile-space{
@@ -28,10 +26,42 @@ main {
     background-color:red;  
     
 }    
-.entity-goal{
-}
-
-.entity-player{
-    background-image:url("../images/FishLightBlue.png");
+.entity-block-goal{
+    background-image:url("../images/boxHome.png");
     background-size: contain;
 }
+
+.entity-player-idle-up{
+    background-image:url("../images/avatar_idle_up.gif");
+    background-size: contain;
+}
+.entity-player-idle-left{
+    background-image:url("../images/avatar_idle_left.gif");
+    background-size: contain;
+}
+.entity-player-idle-down{
+    background-image:url("../images/avatar_idle_down.gif");
+    background-size: contain;
+}
+.entity-player-idle-right{
+    background-image:url("../images/avatar_idle_right.gif");
+    background-size: contain;
+}
+.entity-player-right{
+    background-image:url("../images/avatar_right.gif");
+    background-size: contain;
+}
+ .entity-player-left{
+        background-image:url("../images/avatar_left.gif");
+        background-size: contain;
+ }
+ .entity-player-up{
+    background-image:url("../images/avatar_up.gif");
+    background-size: contain;
+}
+.entity-player-down{
+    background-image:url("../images/avatar_down.gif");
+    background-size: contain;
+}
+
+

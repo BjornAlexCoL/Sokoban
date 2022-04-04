@@ -1,9 +1,9 @@
 "use strict";
 const mapGrid=document.getElementsByClassName("mapGrid")[0];
-const scale=25;
+const scale=50;
 var avatarX;
 var avatarY;
-
+var avatarLastDirection="-idle-up";
 
 const boxes =[];
 
@@ -11,29 +11,42 @@ const boxes =[];
 displayGridMap();
 
 document.addEventListener('keydown',keyPressed);
+document.addEventListener('keyup',keyReleased);
+
+function keyReleased(event){
+    console.log("key Released");
+    event.preventDefault();
+    setDirection(avatarLastDirection,"-idle"+avatarLastDirection);
+    
+}
 
 function keyPressed(event){
     console.log("key pressed");
     event.preventDefault();
+    var avatarDirection=avatarLastDirection;
     var dirX=0;
     var dirY=0;
     switch (event.keyCode) {
         case 39:{ //Right
-            dirX=1;
+            avatarDirection="-right";            
+            dirX=1;           
             console.log("right");
             break;
         }
         case 37:{ //Left
+            avatarDirection="-left";            
             dirX=-1;
             console.log("left");
             break;
         }   
         case 38:{ //Up
+            avatarDirection="-up";            
             dirY=-1;
             console.log("up");
             break;
         }
         case 40:{//Down
+            avatarDirection="-down";            
             dirY=1;
             console.log("down");
             break;
@@ -43,12 +56,24 @@ function keyPressed(event){
         }
         
     }
-        console.log(avatarX,avatarY,dirX,dirY);
-           
-        checkFreeTile(avatarX,avatarY,dirX,dirY);
-        }        
+    console.log(avatarX,avatarY,dirX,dirY);
+    const tileId=document.getElementById("x"+avatarX+"y"+avatarY);
+    console.log(avatarLastDirection);
+       
+    setDirection(avatarLastDirection,avatarDirection);
     
-
+    avatarLastDirection=avatarDirection;
+    checkFreeTile(avatarX,avatarY,dirX,dirY);
+}        
+    
+    function setDirection(oldDirection,newDirection){
+        const tileId=document.getElementById("x"+avatarX+"y"+avatarY);
+        console.log(oldDirection+"->"+newDirection);
+           
+        tileId.classList.toggle(Entities.Character+oldDirection);
+        tileId.classList.toggle(Entities.Character+newDirection);
+            
+    }
     
     function moveObject(className,from,to){
     console.log("Class: "+ className+" From: "+ from+" To: "+ to)    
@@ -74,22 +99,22 @@ function keyPressed(event){
             
             console.log(toMoveToId.classList);
 
-            if(toMoveToId.classList.contains(Entities.Block) && toMoveFromId.classList.contains(Entities.Character)){
+            if(toMoveToId.classList.contains(Entities.Block) && toMoveFromId.classList.contains(avatarLastDirection)){
                 console.log("to: "+toMoveToId.classList+" from: " + toMoveFromId.classList);
                checkFreeTile(checkX,checkY,dirX,dirY);
               }
                           
             if (!toMoveToId.classList.contains(Entities.Block)&&(toMoveToId.classList.contains(Tiles.Space) || toMoveToId.classList.contains(Tiles.Goal))){
                 console.log("move something");
-                if(toMoveFromId.classList.contains(Entities.Character)){
-                    entity=Entities.Character;
+                if(toMoveFromId.classList.contains(avatarLastDirection)){
+                    entity=avatarLastDirection;
                     avatarX=checkX;
                     avatarY=checkY;
                 }
                 else
                 {
                     console.log("move Block")
-                    entity=Entities.Block;          
+                    entity=(toMoveToId.classList.contains(Tiles.Goal))?Entities.BlockDone:Entities.Block;
                 }
                 console.log("Now we move")       
                 moveObject(entity,toMoveFromId, toMoveToId);
@@ -100,7 +125,7 @@ function keyPressed(event){
         
             
             function displayGridMap(){
-                console.log("display grid")
+                console.log("display grid");
                 mapGrid.style.width=scale*tileMap01.width+"px";
                 mapGrid.style.height=scale*tileMap01.height+"px";     
                 for (var tileY=0;tileY<tileMap01.height;tileY++){
@@ -116,7 +141,7 @@ function keyPressed(event){
                             break;        
                             }
                             case "P":{
-                            cssTileType=Tiles.Space+" "+Entities.Character;
+                            cssTileType=Tiles.Space+" "+Entities.Character+"-idle-up";
                                 avatarX=tileX;
                                 avatarY=tileY;
                                 break;
