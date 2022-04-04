@@ -23,7 +23,8 @@ main {
 }
 
 .entity-block{
-    background-color:red;  
+    background-image:url("../images/box.png");
+    background-size: contain;
     
 }    
 .entity-block-goal{
