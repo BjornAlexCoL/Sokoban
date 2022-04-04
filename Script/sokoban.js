@@ -6,7 +6,7 @@ var avatarY;
 var avatarLastDirection="-idle-up";
 var moveCounter=0;
 var block=0;
-var totalBlocks;
+var totalBlocks=0;
 
 displayGridMap(); // Draw Map
 
