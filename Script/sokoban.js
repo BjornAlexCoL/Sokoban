@@ -7,6 +7,8 @@ var avatarLastDirection="-idle-up";
 var moveCounter=0;
 var block=0;
 var totalBlocks=0;
+var time=Date.now();
+var timeInterval=null;
 
 displayGridMap(); // Draw Map
 
@@ -78,13 +80,17 @@ function keyPressed(event){
                checkFreeTile(checkX,checkY,dirX,dirY); //Check if block is movable.
               }
               
-            //Move block or avatar if possible   
-            if ((!toMoveToId.classList.contains(Entities.Block)&&!toMoveToId.classList.contains(Entities.BlockDone))&&(toMoveToId.classList.contains(Tiles.Space) || toMoveToId.classList.contains(Tiles.Goal))){
-                if(toMoveFromId.classList.contains(avatar)){//Move Avatar
+              //Move block or avatar if possible   
+              if ((!toMoveToId.classList.contains(Entities.Block)&&!toMoveToId.classList.contains(Entities.BlockDone))&&(toMoveToId.classList.contains(Tiles.Space) || toMoveToId.classList.contains(Tiles.Goal))){
+                  if(toMoveFromId.classList.contains(avatar)){//Move Avatar
                     toMoveFromId.classList.toggle(avatar);  
                     toMoveToId.classList.toggle(avatar);
                     avatarX=checkX;
                     avatarY=checkY;
+                    if(moveCounter===0){
+                        time=Date.now();
+                        timeInterval=setInterval(updateTime,100);
+                        }
                     moveCounter++;    
                 }
                 else
@@ -93,6 +99,10 @@ function keyPressed(event){
                     toMoveToId.classList.toggle((toMoveToId.classList.contains(Tiles.Goal))?Entities.BlockDone:Entities.Block);
                     //Change BlockCounter
                     toMoveToId.classList.contains(Tiles.Goal)?(toMoveFromId.classList.contains(Tiles.Space)?block++:0):(toMoveFromId.classList.contains(Tiles.Goal)?block--:0);
+                    if (block===totalBlocks){
+                        clearInterval(timeInterval);
+                        time=Date.now()-time;
+                    }
                 }                  
             }
             displayScore();
@@ -146,8 +156,11 @@ function keyPressed(event){
             }
 
             function displayScore(){
-                document.getElementsByClassName("counter")[0].innerHTML=moveCounter;
-                document.getElementsByClassName("block")[0].innerHTML=block+" ("+totalBlocks+")";
+                    document.getElementsByClassName("counter")[0].innerHTML=moveCounter;
+                    document.getElementsByClassName("block")[0].innerHTML=block+" ("+totalBlocks+")";                
+                }
                 
-
+            function updateTime(){
+                    var elapsedTime=Date.now()-time;
+                    document.getElementsByClassName("time")[0].innerHTML=(Math.round(elapsedTime/60000-.5)).toFixed(0)+":"+(elapsedTime%60000/1000).toFixed(1);
             }
