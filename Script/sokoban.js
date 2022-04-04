@@ -4,6 +4,9 @@ const scale=50;
 var avatarX;
 var avatarY;
 var avatarLastDirection="-idle-up";
+var moveCounter=0;
+var block=0;
+var totalBlocks;
 
 displayGridMap(); // Draw Map
 
@@ -61,7 +64,6 @@ function keyPressed(event){
             var avatar=Entities.Character+avatarLastDirection;	
             var checkX=currPosX+dirX;
             var checkY=currPosY+dirY;
-            console.log("x: " +currPosX,currPosY); //Check if outside Map.
             if ((checkX<0) || (checkY<0) || (checkX>=tileMap01.width) || (checkY>=tileMap01.height))
             { 
                 return;
@@ -80,16 +82,20 @@ function keyPressed(event){
             if ((!toMoveToId.classList.contains(Entities.Block)&&!toMoveToId.classList.contains(Entities.BlockDone))&&(toMoveToId.classList.contains(Tiles.Space) || toMoveToId.classList.contains(Tiles.Goal))){
                 if(toMoveFromId.classList.contains(avatar)){//Move Avatar
                     toMoveFromId.classList.toggle(avatar);  
-                    toMoveToId.classList.toggle(avatar);    
+                    toMoveToId.classList.toggle(avatar);
                     avatarX=checkX;
                     avatarY=checkY;
+                    moveCounter++;    
                 }
                 else
                 {   //Move Block
                     toMoveFromId.classList.toggle((toMoveFromId.classList.contains(Entities.Block))?Entities.Block:Entities.BlockDone);
                     toMoveToId.classList.toggle((toMoveToId.classList.contains(Tiles.Goal))?Entities.BlockDone:Entities.Block);
-                    }                  
-                }
+                    //Change BlockCounter
+                    toMoveToId.classList.contains(Tiles.Goal)?(toMoveFromId.classList.contains(Tiles.Space)?block++:0):(toMoveFromId.classList.contains(Tiles.Goal)?block--:0);
+                }                  
+            }
+            displayScore();
               return               
              }
         
@@ -103,6 +109,7 @@ function keyPressed(event){
                         switch(tileMap01.mapGrid[tileY][tileX][0]){
                             case "B":{
                             cssTileType=Entities.Block+" "+Tiles.Space;
+                            totalBlocks++;
                             break;        
                             }
                             case "W":{
@@ -126,6 +133,7 @@ function keyPressed(event){
                         makeTile("tile "+cssTileType,tileX,tileY);
                     }
                 }
+                displayScore();
             }
 
             //Draw Tile
@@ -135,4 +143,11 @@ function keyPressed(event){
                 tile.id=idValue;
                 tile.className=cssTileType;
                 mapGrid.appendChild(tile);            
+            }
+
+            function displayScore(){
+                document.getElementsByClassName("counter")[0].innerHTML=moveCounter;
+                document.getElementsByClassName("block")[0].innerHTML=block;
+                
+
             }

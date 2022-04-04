@@ -65,4 +65,19 @@ main {
     background-size: contain;
 }
 
+.counter{
+display:float;
+text-align: right;
+align-content:center;
+}
+.block{
+    display:float;
+    text-align:center;
+    align-content:center;
+}
 
+.time{
+    display:float;
+    text-align:left;
+    align-content:center;
+}
