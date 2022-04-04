@@ -14,14 +14,16 @@ document.addEventListener('keydown',keyPressed);
 document.addEventListener('keyup',keyReleased);
 
 function keyReleased(event){
-    console.log("key Released");
     event.preventDefault();
-    setDirection(avatarLastDirection,"-idle"+avatarLastDirection);
+  //  console.log("key Released");
+  //  console.log("Last Direction: "+avatarLastDirection+"New: -idle"+avatarLastDirection)
     
+    setDirection(avatarLastDirection,"-idle"+avatarLastDirection);
+    avatarLastDirection="-idle"+avatarLastDirection;
 }
 
 function keyPressed(event){
-    console.log("key pressed");
+//    console.log("key pressed");
     event.preventDefault();
     var avatarDirection=avatarLastDirection;
     var dirX=0;
@@ -30,25 +32,25 @@ function keyPressed(event){
         case 39:{ //Right
             avatarDirection="-right";            
             dirX=1;           
-            console.log("right");
+//            console.log("right");
             break;
         }
         case 37:{ //Left
             avatarDirection="-left";            
             dirX=-1;
-            console.log("left");
+  //          console.log("left");
             break;
         }   
         case 38:{ //Up
             avatarDirection="-up";            
             dirY=-1;
-            console.log("up");
+   //         console.log("up");
             break;
         }
         case 40:{//Down
             avatarDirection="-down";            
             dirY=1;
-            console.log("down");
+    //        console.log("down");
             break;
         }
         default:{
@@ -56,10 +58,11 @@ function keyPressed(event){
         }
         
     }
-    console.log(avatarX,avatarY,dirX,dirY);
+ //   console.log(avatarX,avatarY,dirX,dirY);
     const tileId=document.getElementById("x"+avatarX+"y"+avatarY);
-    console.log(avatarLastDirection);
+ //   console.log(avatarLastDirection);
        
+ //   console.log("Move Avatar: "+avatarLastDirection+" -> "+avatarDirection);
     setDirection(avatarLastDirection,avatarDirection);
     
     avatarLastDirection=avatarDirection;
@@ -68,23 +71,18 @@ function keyPressed(event){
     
     function setDirection(oldDirection,newDirection){
         const tileId=document.getElementById("x"+avatarX+"y"+avatarY);
-        console.log(oldDirection+"->"+newDirection);
-           
+//        console.log("Set Direction: "+oldDirection+" -> "+newDirection);
+//        console.log(tileId.classList);         
         tileId.classList.toggle(Entities.Character+oldDirection);
         tileId.classList.toggle(Entities.Character+newDirection);
+  //      console.log(tileId.classList);         
             
     }
     
-    function moveObject(className,from,to){
-    console.log("Class: "+ className+" From: "+ from+" To: "+ to)    
-    from.classList.toggle(className);  
-    to.classList.toggle(className);    
-
-    }
-
     function checkFreeTile(currPosX,currPosY,dirX,dirY){
             console.log("checkFreeTile");
             var entity;
+            var avatar=Entities.Character+avatarLastDirection;	
             var checkX=currPosX+dirX;
             var checkY=currPosY+dirY;
             console.log("x: " +currPosX,currPosY);
@@ -99,26 +97,28 @@ function keyPressed(event){
             
             console.log(toMoveToId.classList);
 
-            if(toMoveToId.classList.contains(Entities.Block) && toMoveFromId.classList.contains(avatarLastDirection)){
+            if((toMoveToId.classList.contains(Entities.Block)||toMoveToId.classList.contains(Entities.BlockDone)) && toMoveFromId.classList.contains(avatar)){
                 console.log("to: "+toMoveToId.classList+" from: " + toMoveFromId.classList);
                checkFreeTile(checkX,checkY,dirX,dirY);
               }
                           
-            if (!toMoveToId.classList.contains(Entities.Block)&&(toMoveToId.classList.contains(Tiles.Space) || toMoveToId.classList.contains(Tiles.Goal))){
+            if ((!toMoveToId.classList.contains(Entities.Block)&&!toMoveToId.classList.contains(Entities.BlockDone))&&(toMoveToId.classList.contains(Tiles.Space) || toMoveToId.classList.contains(Tiles.Goal))){
                 console.log("move something");
-                if(toMoveFromId.classList.contains(avatarLastDirection)){
-                    entity=avatarLastDirection;
+                if(toMoveFromId.classList.contains(avatar)){
+                    toMoveFromId.classList.toggle(avatar);  
+                    toMoveToId.classList.toggle(avatar);    
                     avatarX=checkX;
                     avatarY=checkY;
                 }
                 else
                 {
-                    console.log("move Block")
-                    entity=(toMoveToId.classList.contains(Tiles.Goal))?Entities.BlockDone:Entities.Block;
+                    console.log("move Block");
+                    toMoveFromId.classList.toggle((toMoveFromId.classList.contains(Entities.Block))?Entities.Block:Entities.BlockDone);
+                    toMoveToId.classList.toggle((toMoveToId.classList.contains(Tiles.Goal))?Entities.BlockDone:Entities.Block);
+                    }
+                   
                 }
-                console.log("Now we move")       
-                moveObject(entity,toMoveFromId, toMoveToId);
-            }
+                
          
                    return               
              }
