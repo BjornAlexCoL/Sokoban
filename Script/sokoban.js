@@ -5,12 +5,12 @@ var avatarX;
 var avatarY;
 var avatarLastDirection="-idle-up";
 
-displayGridMap();
+displayGridMap(); // Draw Map
 
 document.addEventListener('keydown',keyPressed);//Time to Move
 document.addEventListener('keyup',keyReleased); //Make avatar idle
 
-function keyReleased(event){
+function keyReleased(event){ //Set idle
     event.preventDefault();
     setDirection(avatarLastDirection,"-idle"+avatarLastDirection);
     avatarLastDirection="-idle"+avatarLastDirection;
