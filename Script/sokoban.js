@@ -5,25 +5,18 @@ var avatarX;
 var avatarY;
 var avatarLastDirection="-idle-up";
 
-const boxes =[];
-
-
 displayGridMap();
 
-document.addEventListener('keydown',keyPressed);
-document.addEventListener('keyup',keyReleased);
+document.addEventListener('keydown',keyPressed);//Time to Move
+document.addEventListener('keyup',keyReleased); //Make avatar idle
 
 function keyReleased(event){
     event.preventDefault();
-  //  console.log("key Released");
-  //  console.log("Last Direction: "+avatarLastDirection+"New: -idle"+avatarLastDirection)
-    
     setDirection(avatarLastDirection,"-idle"+avatarLastDirection);
     avatarLastDirection="-idle"+avatarLastDirection;
 }
 
 function keyPressed(event){
-//    console.log("key pressed");
     event.preventDefault();
     var avatarDirection=avatarLastDirection;
     var dirX=0;
@@ -32,100 +25,76 @@ function keyPressed(event){
         case 39:{ //Right
             avatarDirection="-right";            
             dirX=1;           
-//            console.log("right");
             break;
         }
         case 37:{ //Left
             avatarDirection="-left";            
             dirX=-1;
-  //          console.log("left");
             break;
         }   
         case 38:{ //Up
             avatarDirection="-up";            
             dirY=-1;
-   //         console.log("up");
             break;
         }
         case 40:{//Down
             avatarDirection="-down";            
             dirY=1;
-    //        console.log("down");
             break;
         }
         default:{
             break;
         }
-        
     }
- //   console.log(avatarX,avatarY,dirX,dirY);
-    const tileId=document.getElementById("x"+avatarX+"y"+avatarY);
- //   console.log(avatarLastDirection);
-       
- //   console.log("Move Avatar: "+avatarLastDirection+" -> "+avatarDirection);
-    setDirection(avatarLastDirection,avatarDirection);
-    
+    setDirection(avatarLastDirection,avatarDirection); //Set Dirextion of avatar.
     avatarLastDirection=avatarDirection;
-    checkFreeTile(avatarX,avatarY,dirX,dirY);
+    checkFreeTile(avatarX,avatarY,dirX,dirY); //Check if free move avatar and block if possible.
 }        
     
-    function setDirection(oldDirection,newDirection){
+    function setDirection(oldDirection,newDirection){//Set direction of avatar
         const tileId=document.getElementById("x"+avatarX+"y"+avatarY);
-//        console.log("Set Direction: "+oldDirection+" -> "+newDirection);
-//        console.log(tileId.classList);         
         tileId.classList.toggle(Entities.Character+oldDirection);
         tileId.classList.toggle(Entities.Character+newDirection);
-  //      console.log(tileId.classList);         
-            
     }
     
     function checkFreeTile(currPosX,currPosY,dirX,dirY){
-            console.log("checkFreeTile");
-            var entity;
             var avatar=Entities.Character+avatarLastDirection;	
             var checkX=currPosX+dirX;
             var checkY=currPosY+dirY;
-            console.log("x: " +currPosX,currPosY);
+            console.log("x: " +currPosX,currPosY); //Check if outside Map.
             if ((checkX<0) || (checkY<0) || (checkX>=tileMap01.width) || (checkY>=tileMap01.height))
             { 
                 return;
             }
             
+
             const toMoveFromId=document.getElementById("x"+currPosX+"y"+currPosY);
             const toMoveToId=document.getElementById("x"+checkX+"y"+checkY);
-            console.log(toMoveFromId.classList);
-            
-            console.log(toMoveToId.classList);
 
+            //Check and move block if movable
             if((toMoveToId.classList.contains(Entities.Block)||toMoveToId.classList.contains(Entities.BlockDone)) && toMoveFromId.classList.contains(avatar)){
-                console.log("to: "+toMoveToId.classList+" from: " + toMoveFromId.classList);
-               checkFreeTile(checkX,checkY,dirX,dirY);
+               checkFreeTile(checkX,checkY,dirX,dirY); //Check if block is movable.
               }
-                          
+              
+            //Move block or avatar if possible   
             if ((!toMoveToId.classList.contains(Entities.Block)&&!toMoveToId.classList.contains(Entities.BlockDone))&&(toMoveToId.classList.contains(Tiles.Space) || toMoveToId.classList.contains(Tiles.Goal))){
-                console.log("move something");
-                if(toMoveFromId.classList.contains(avatar)){
+                if(toMoveFromId.classList.contains(avatar)){//Move Avatar
                     toMoveFromId.classList.toggle(avatar);  
                     toMoveToId.classList.toggle(avatar);    
                     avatarX=checkX;
                     avatarY=checkY;
                 }
                 else
-                {
-                    console.log("move Block");
+                {   //Move Block
                     toMoveFromId.classList.toggle((toMoveFromId.classList.contains(Entities.Block))?Entities.Block:Entities.BlockDone);
                     toMoveToId.classList.toggle((toMoveToId.classList.contains(Tiles.Goal))?Entities.BlockDone:Entities.Block);
-                    }
-                   
+                    }                  
                 }
-                
-         
-                   return               
+              return               
              }
         
-            
+            //Draw map
             function displayGridMap(){
-                console.log("display grid");
                 mapGrid.style.width=scale*tileMap01.width+"px";
                 mapGrid.style.height=scale*tileMap01.height+"px";     
                 for (var tileY=0;tileY<tileMap01.height;tileY++){
@@ -155,13 +124,11 @@ function keyPressed(event){
                                 break;
                         }
                         makeTile("tile "+cssTileType,tileX,tileY);
-                                      
                     }
-
                 }
-                console.log("Display Grid Done");
             }
 
+            //Draw Tile
             function makeTile(cssTileType,x,y){
                 let tile=document.createElement('div');
                 let idValue="x"+x+"y"+y;
