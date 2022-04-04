@@ -147,7 +147,7 @@ function keyPressed(event){
 
             function displayScore(){
                 document.getElementsByClassName("counter")[0].innerHTML=moveCounter;
-                document.getElementsByClassName("block")[0].innerHTML=block;
+                document.getElementsByClassName("block")[0].innerHTML=block+" ("+totalBlocks+")";
                 
 
             }
