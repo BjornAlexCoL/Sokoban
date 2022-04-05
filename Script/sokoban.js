@@ -17,8 +17,10 @@ document.addEventListener('keyup',keyReleased); //Make avatar idle
 
 function keyReleased(event){ //Set idle
     event.preventDefault();
+    if((event.keyCode>=37) && (event.keyCode<=40)){
     setDirection(avatarLastDirection,"-idle"+avatarLastDirection);
     avatarLastDirection="-idle"+avatarLastDirection;
+    }
 }
 
 function keyPressed(event){
@@ -51,9 +53,11 @@ function keyPressed(event){
             break;
         }
     }
+    if((dirX!=0) || (dirY!=0)){
     setDirection(avatarLastDirection,avatarDirection); //Set Dirextion of avatar.
     avatarLastDirection=avatarDirection;
     checkFreeTile(avatarX,avatarY,dirX,dirY); //Check if free move avatar and block if possible.
+    }    
 }        
     
     function setDirection(oldDirection,newDirection){//Set direction of avatar
