@@ -1,6 +1,6 @@
 "use strict";
 const mapGrid=document.getElementsByClassName("mapGrid")[0];
-const scale=50;
+const scale=45;
 var avatarX;
 var avatarY;
 var avatarLastDirection="-idle-up";
@@ -111,8 +111,12 @@ function keyPressed(event){
         
             //Draw map
             function displayGridMap(){
+                //const gridTile=document.getElementsByClassName("tile")[0];
                 mapGrid.style.width=scale*tileMap01.width+"px";
-                mapGrid.style.height=scale*tileMap01.height+"px";     
+                mapGrid.style.height=scale*tileMap01.height+"px";
+                //gridTile.style.width=scale+"px";
+                //gridTile.style.height=scale+"px";
+                document.getElementsByTagName("footer")[0].style.width=mapGrid.style.width;
                 for (var tileY=0;tileY<tileMap01.height;tileY++){
                     for (var tileX=0;tileX<tileMap01.width;tileX++){
                         var cssTileType="";
